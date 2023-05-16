@@ -92,6 +92,32 @@
     used to identify groups of devices. See <command>man 5 mdadm.conf</command>
     for more information.
    </para>
+
+   <sect2 xml:id="sec-replacing-failed-drive">
+    <title>Replacing a failed drive</title>
+    <note>
+      <title>RAID 1 not covered</title>
+      <para>
+        The following instructions does not cover replacing a disk from RAID 1.
+      </para>
+    </note>
+    <important>
+      <title>The replacement disk without data and partitions</title>
+      <para>
+        Make sure that the replacement disk does not contain any data or partitions. The data or paritions on the disk will be erased.
+      </para>
+    </important>
+    <para>
+      Before making any changes to the array, perform several checks as described below.
+    </para>
+    <para>
+      View the current state of the array by running:
+    </para>
+    <screen>&prompt.root;<command>cat /proc/mdstat</command></screen>
+    <para>
+      In the output a missing disk is indicated by <literal>[_U]</literal> or <literal>[U_]</literal>.
+    </para>
+   </sect2>
   
  </sect1>
  

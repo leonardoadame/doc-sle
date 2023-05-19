@@ -5,11 +5,11 @@
     %entities;
 ]>
 <sect1 version="5.0"
-  xml:id="CreateProfile-Bootloader"
+  xml:id="CreateProfile-Bootloader-Grub"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
- <title>The boot loader</title>
+ <title>The &grub; boot loader</title>
 
  <info>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
@@ -44,7 +44,7 @@
   &lt;/device_map&gt;
  &lt;/bootloader&gt;</screen>
 
- <sect2 xml:id="CreateProfile-Bootloader-type">
+ <sect2 xml:id="CreateProfile-Bootloader-type-Grub">
   <title>Loader type</title>
   <para>
    This defines which boot loader (UEFI or BIOS/legacy) to use. Not all
@@ -82,7 +82,7 @@
   </itemizedlist>
  </sect2>
 
- <sect2 xml:id="CreateProfile-Bootloader-globals">
+ <sect2 xml:id="CreateProfile-Bootloader-globals-Grub">
   <title>Globals</title>
   <para>
    This is an important if optional part. Define here where to install &grub;
@@ -433,7 +433,7 @@
   </variablelist>
  </sect2>
 
- <sect2 xml:id="CreateProfile-Bootloader-dev-map">
+ <sect2 xml:id="CreateProfile-Bootloader-dev-map-Grub">
   <title>Device map</title>
   <para>
    &grub; avoids mapping problems between BIOS drives and Linux devices by

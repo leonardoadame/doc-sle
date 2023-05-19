@@ -110,13 +110,112 @@
     <para>
       Before making any changes to the array, perform several checks as described below.
     </para>
+    <procedure>
+      <step>
     <para>
       View the current state of the array by running:
     </para>
     <screen>&prompt.root;<command>cat /proc/mdstat</command></screen>
     <para>
-      In the output a missing disk is indicated by <literal>[_U]</literal> or <literal>[U_]</literal>.
+      In the output a missing disk is indicated by <literal>[_U]</literal> or <literal>[U_]</literal>. Usually, the broken disks are not visible in the command output.
     </para>
+
+    <note>
+      <title>The md number may differ in your case</title>
+      <para>
+        Note down which partition number is assigned to which md number.
+      </para>
+    </note>
+  </step>
+  <step>
+    <para>
+      Using the <command>lsblk</command> command, check the hierarchical structure of each disk and partition:
+    </para>
+    <screen>&prompt.root;<command>lsblk</command>
+
+NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
+sr0      11:0    1 1024M  0 rom   
+vda     254:0    0   60G  0 disk  
+├─vda1  254:1    0    8M  0 part  
+├─vda2  254:2    0   20G  0 part  /boot/grub2/x86_64-efi
+│                                 /srv
+│                                 /home
+│                                 /opt
+│                                 /boot/grub2/i386-pc
+│                                 /usr/local
+│                                 /boot/writable
+│                                 /.snapshots
+│                                 /root
+│                                 /
+└─vda3  254:3    0   40G  0 part  /var
+vdb     254:16   0   20G  0 disk  /run/media/root/ext4
+vdc     254:32   0   10G  0 disk  
+└─md127   9:127  0   20G  0 raid0 /run/media/root/raid0
+vdd     254:48   0   10G  0 disk  
+    </screen>
+    <para>
+      The command above shows the hierarchy related to the md devices and show the current use. 
+    </para>
+  </step>
+  <step>
+    <para>
+      Make sure, that the disk to be replaced (<literal>vdd</literal>) in the example is not showing any subelements. Run the command:
+    </para>
+    <screen>&prompt.root;<command>blkid</command>
+
+...
+/dev/vdc: UUID="27a652e1-2567-1802-ccf3-6dab3b40bfd7" UUID_SUB="322fb559-a4db-cedc-5109-b9ba0fd8312a" LABEL="localhost.localdomain:raid0" TYPE="linux_raid_member"
+...
+    </screen>
+    <para>
+      The command displays the current UUIDs of all block devices.
+</para>
+<step>
+<para>
+       Make sure that the disk you want to use as a replacement does not contain any partitions:
+    </para>
+    <screen>&prompt.root;<command>parted /dev/vdd print</command>
+      
+Model: Virtio Block Device (virtblk)                                      
+Disk /dev/vdd: 10.7GB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags: 
+    </screen>
+  </step>
+  <step>
+    <para>
+      Check which block device is used for booting:
+    </para>
+    <screen>&prompt.root;efibootmgr -v</screen>
+    <para>
+      Save the output of the commands above for possible later use.
+    </para>
+  </step>
+  </procedure>
+  <para>
+    The following procedure describes replacing of the disk.
+  </para>
+  <procedure>
+    <step>
+      <para>
+        If the broken disk is still present in the array, mark each partition of the disk as failed:
+      </para>
+      <screen>&prompt.root;<command>mdadm --manage /dev/md127 --fail /dev/vdd<replaceable>PARTITION_ID</replaceable></command>
+
+      mdadm: set /dev/vdd1 faulty in /dev/md127
+      </screen>
+    </step>
+    <step>
+      <para>
+        Remove all partitions of the broken disk from the array. For each partition, run:
+      </para>
+      <screen>&prompt.root;<command>mdadm --manage /dev/md127 --remove /dev/vdd<replaceable>PARTITION_ID</replaceable></command>
+
+      mdadm: hot removed /dev/vdd1 from /dev/md127
+      </screen>
+    </step>
+  </procedure>
    </sect2>
   
  </sect1>

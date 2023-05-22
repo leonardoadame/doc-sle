@@ -215,6 +215,24 @@ Disk Flags:
       mdadm: hot removed /dev/vdd1 from /dev/md127
       </screen>
     </step>
+    <step>
+      <para>
+        Prepare the new disk. Use a disk of the same size as the broken one or identical to the disk in the array. 
+      </para>
+      <para>
+        The new disk must be empty. To ensure this, run the following command:
+      </para>
+      <screen>&prompt.root;<command>dd if=/dev/zero bs=4096 status=progress of=/dev/vdd</command>
+      </screen>
+      <para>
+        As the limit has not been specified, the error: <emphasis>dd: error writing '/dev/vdd': No space left on device</emphasis> appears, but can be ignored.
+      </para>
+    </step>
+    <step>
+      <para>
+        In the following steps, you 
+      </para>
+    </step>
   </procedure>
    </sect2>
   
